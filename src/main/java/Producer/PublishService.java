@@ -11,12 +11,14 @@ public class PublishService implements Publishable {
 
     private Connection connection;
     private Channel channel;
+    private Executor executor;
 
     public PublishService() {
         ConnectionFactory factory = getConnection();
         try {
             this.connection = factory.newConnection();
             this.channel = connection.createChannel();
+            this.executor = new Executor(channel);
         } catch (IOException | TimeoutException e) {
             e.printStackTrace();
         }
@@ -34,7 +36,6 @@ public class PublishService implements Publishable {
 
     @Override
     public void publishMessage(String message) throws IOException {
-        Executor executor = new Executor(channel);
         executor.sendMessageToExchange(message);
     }
 
@@ -43,5 +44,4 @@ public class PublishService implements Publishable {
         channel.close();
         connection.close();
     }
-
 }

@@ -14,12 +14,12 @@ public class Executor {
 
     private final Channel channel;
 
-    public Executor(Channel channel) {
+    public Executor(Channel channel) throws IOException {
         this.channel = channel;
+        channel.exchangeDeclare(EXCHANGE_NAME, ROUTING_TYPE);
     }
 
     public void sendMessageToExchange(String message) throws IOException {
-        channel.exchangeDeclare(EXCHANGE_NAME, ROUTING_TYPE);
         channel.basicPublish(EXCHANGE_NAME, ROUTING_KEY, null,
                 message.getBytes(StandardCharsets.UTF_8));
         Logger.getGlobal().info("Message:" + " " + message + " " + "is successfully sent to exchange!");
