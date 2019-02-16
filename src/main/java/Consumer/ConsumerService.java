@@ -7,7 +7,7 @@ import com.rabbitmq.client.ConnectionFactory;
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;
 
-public class ConsumerService {
+public class ConsumerService implements Readable {
 
     private Channel channel;
 
@@ -35,6 +35,7 @@ public class ConsumerService {
         return factory;
     }
 
+    @Override
     public void getMessages() throws IOException {
         MessageHandler handler = new MessageHandler(channel);
         handler.handleMessages();

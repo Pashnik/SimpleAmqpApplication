@@ -20,7 +20,7 @@ public class WorkPool extends Thread {
     @Override
     public void run() {
         Logger.getGlobal().info("Message:" + " " + message + " " + "is arrived to a work pool!");
-        processContent(message);
+        process(message -> System.out.println(message));
         try {
             channel.basicAck(tag, false);
         } catch (IOException e) {
@@ -28,8 +28,8 @@ public class WorkPool extends Thread {
         }
     }
 
-    private void processContent(String message) {
-        System.out.println(message);
+    private void process(Worker worker) {
+        worker.processContent(message);
     }
 
 }
