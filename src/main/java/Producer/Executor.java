@@ -9,14 +9,14 @@ import java.util.logging.Logger;
 public class Executor {
 
     private static final String EXCHANGE_NAME = "simple_exchange";
+    private static final String EXCHANGE_TYPE = "direct";
     private static final String ROUTING_KEY = "route";
-    private static final String ROUTING_TYPE = "direct";
 
     private final Channel channel;
 
     public Executor(Channel channel) throws IOException {
         this.channel = channel;
-        channel.exchangeDeclare(EXCHANGE_NAME, ROUTING_TYPE);
+        channel.exchangeDeclare(EXCHANGE_NAME, EXCHANGE_TYPE);
     }
 
     public void sendMessageToExchange(String message) throws IOException {
