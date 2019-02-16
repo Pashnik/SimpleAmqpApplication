@@ -10,12 +10,15 @@ import java.util.concurrent.TimeoutException;
 public class ConsumerService implements Readable {
 
     private Channel channel;
+    private MessageHandler handler;
+    private Connection connection;
 
     public ConsumerService() {
         ConnectionFactory factory = getFactory();
         try {
-            Connection connection = factory.newConnection();
+            this.connection = factory.newConnection();
             this.channel = connection.createChannel();
+            this.handler = new MessageHandler(channel);
         } catch (IOException | TimeoutException e) {
             e.printStackTrace();
         }
@@ -37,8 +40,14 @@ public class ConsumerService implements Readable {
 
     @Override
     public void getMessages() throws IOException {
-        MessageHandler handler = new MessageHandler(channel);
         handler.handleMessages();
+    }
+
+    @Override
+    public void closeAll() throws IOException, TimeoutException {
+        channel.close();
+        connection.close();
+        handler.close();
     }
 
 }

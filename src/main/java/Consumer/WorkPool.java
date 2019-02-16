@@ -3,32 +3,35 @@ package Consumer;
 import com.rabbitmq.client.Channel;
 
 import java.io.IOException;
-import java.util.logging.Logger;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class WorkPool extends Thread {
 
-    private Channel channel;
-    private String message;
-    private long tag;
+    private final ExecutorService executorService;
+    private final Channel channel;
 
-    public WorkPool(Channel channel, String message, long tag) {
+    public WorkPool(Channel channel) {
         this.channel = channel;
-        this.message = message;
-        this.tag = tag;
+        this.executorService = Executors.newCachedThreadPool();
     }
 
-    @Override
-    public void run() {
-        Logger.getGlobal().info("Message:" + " " + message + " " + "is arrived to a work pool!");
-        process(message -> System.out.println(message));
-        try {
-            channel.basicAck(tag, false);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public void doTask(String message, long consumerTag) {
+        executorService.submit(() -> {
+            process(message, content -> System.out.println(content));
+            try {
+                channel.basicAck(consumerTag, false);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
     }
 
-    private void process(Worker worker) {
+    public void closeWorkPool() {
+        executorService.shutdown();
+    }
+
+    private void process(String message, Worker worker) {
         worker.processContent(message);
     }
 

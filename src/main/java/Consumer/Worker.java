@@ -2,5 +2,5 @@ package Consumer;
 
 @FunctionalInterface
 public interface Worker {
-    void processContent(String message);
+    void processContent(String content);
 }
