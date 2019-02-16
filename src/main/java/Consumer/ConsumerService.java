@@ -41,5 +41,4 @@ public class ConsumerService implements Readable {
         handler.handleMessages();
     }
 
-
 }

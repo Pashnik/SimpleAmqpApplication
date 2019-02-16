@@ -4,6 +4,7 @@ import com.rabbitmq.client.*;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.logging.Logger;
 
 public class MessageHandler {
 
@@ -32,6 +33,7 @@ public class MessageHandler {
             String message = new String(delivery.getBody(), StandardCharsets.UTF_8);
             new WorkPool(channel, message, delivery.getEnvelope().getDeliveryTag()).start();
         };
-        channel.basicConsume(QUEUE_NAME, AUTO_ACK, deliverCallback, consumerTag -> { });
+        channel.basicConsume(QUEUE_NAME, AUTO_ACK, deliverCallback, consumerTag ->
+                Logger.getGlobal().info("Consumer with consumerTag:" + consumerTag + "is cancelled!"));
     }
 }
