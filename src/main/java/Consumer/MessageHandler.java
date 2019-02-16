@@ -13,7 +13,7 @@ public class MessageHandler {
     private static final String ROUTING_KEY = "route";
     private static final String QUEUE_NAME = "demo_queue";
 
-    private static final boolean DURABLE = false;
+    private static final boolean DURABLE = true;
     private static final boolean EXCLUSIVE = false;
     private static final boolean AUTO_DELETE = false;
     private static final boolean AUTO_ACK = false;

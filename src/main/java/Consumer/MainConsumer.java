@@ -4,9 +4,9 @@ import java.io.IOException;
 
 public class MainConsumer {
     public static void main(String[] args) {
-        Readable consumerService = new ConsumerService();
+        Readable service = new ConsumerService();
         try {
-            consumerService.getMessages();
+            service.getMessages();
         } catch (IOException e) {
             e.printStackTrace();
         }

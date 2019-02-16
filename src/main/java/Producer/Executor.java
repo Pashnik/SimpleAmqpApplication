@@ -1,6 +1,7 @@
 package Producer;
 
 import com.rabbitmq.client.Channel;
+import com.rabbitmq.client.MessageProperties;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -20,7 +21,7 @@ public class Executor {
     }
 
     public void sendMessageToExchange(String message) throws IOException {
-        channel.basicPublish(EXCHANGE_NAME, ROUTING_KEY, null,
+        channel.basicPublish(EXCHANGE_NAME, ROUTING_KEY, MessageProperties.PERSISTENT_TEXT_PLAIN,
                 message.getBytes(StandardCharsets.UTF_8));
         Logger.getGlobal().info("Message:" + " " + message + " " + "is successfully sent to exchange!");
     }
