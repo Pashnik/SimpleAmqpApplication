@@ -32,10 +32,11 @@ public class MessageHandler {
     public void handleMessages() throws IOException {
         DeliverCallback deliverCallback = (consumerTag, delivery) -> {
             String message = new String(delivery.getBody(), StandardCharsets.UTF_8);
+            Logger.getGlobal().info("Message" + " " + message + " " + "is delivered to handler!");
             workPool.doTask(message, delivery.getEnvelope().getDeliveryTag());
         };
         channel.basicConsume(QUEUE_NAME, AUTO_ACK, deliverCallback, consumerTag ->
-                Logger.getGlobal().info("Consumer with consumerTag:" + consumerTag + "is cancelled!"));
+                Logger.getGlobal().info("Consumer with consumerTag:" + " " + consumerTag + " " + "is cancelled!"));
     }
 
     public void close() {
