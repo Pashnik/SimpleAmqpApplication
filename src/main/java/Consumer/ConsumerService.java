@@ -5,12 +5,12 @@ import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
 
 import java.io.IOException;
+import java.util.Map;
 import java.util.concurrent.TimeoutException;
 
-public class ConsumerService implements Readable {
+public class ConsumerService {
 
     private Channel channel;
-    private MessageHandler handler;
     private Connection connection;
 
     public ConsumerService() {
@@ -18,7 +18,6 @@ public class ConsumerService implements Readable {
         try {
             this.connection = factory.newConnection();
             this.channel = connection.createChannel();
-            this.handler = new MessageHandler(channel);
         } catch (IOException | TimeoutException e) {
             e.printStackTrace();
         }
@@ -38,16 +37,25 @@ public class ConsumerService implements Readable {
         return factory;
     }
 
-    @Override
-    public void getMessages() throws IOException {
-        handler.handleMessages();
+    public ConsumerExchange declareExchange(String exchangeName, String exchangeType, String routingKey)
+            throws IOException {
+        channel.exchangeDeclare(exchangeName, exchangeType);
+        return new ConsumerExchange(exchangeName, exchangeType, routingKey, channel);
     }
 
-    @Override
+    public ConsumerQueue declareQueue(String name, boolean durable, boolean exclusive, boolean autoDelete,
+                                      boolean autoAck, Map<String, Object> args) throws IOException {
+        channel.queueDeclare(name, durable, exclusive, autoDelete, args);
+        return new ConsumerQueue(name, durable, exclusive, autoDelete, autoAck, args, channel);
+    }
+
+    public void bind(ConsumerExchange exchange, ConsumerQueue queue) throws IOException {
+        channel.queueBind(queue.getName(), exchange.getName(), exchange.getRoutingKey());
+    }
+
     public void closeAll() throws IOException, TimeoutException {
         channel.close();
         connection.close();
-        handler.close();
     }
 
 }

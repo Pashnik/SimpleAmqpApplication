@@ -7,14 +7,14 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.logging.Logger;
 
-public class Exchange {
+public class ProducerExchange {
 
     private final String name;
     private final String type;
     private final String routingKey;
     private final Channel channel;
 
-    public Exchange(String name, String type, String routingKey, Channel channel) {
+    public ProducerExchange(String name, String type, String routingKey, Channel channel) {
         this.name = name;
         this.type = type;
         this.routingKey = routingKey;

@@ -36,9 +36,10 @@ public class PublishService {
         return factory;
     }
 
-    public Exchange declareExchange(String exchangeName, String exchangeType, String routingKey) throws IOException {
+    public ProducerExchange declareExchange(String exchangeName, String exchangeType, String routingKey)
+            throws IOException {
         channel.exchangeDeclare(exchangeName, exchangeType);
-        return new Exchange(exchangeName, exchangeType, routingKey, channel);
+        return new ProducerExchange(exchangeName, exchangeType, routingKey, channel);
     }
 
     public void closeAll() throws IOException, TimeoutException {

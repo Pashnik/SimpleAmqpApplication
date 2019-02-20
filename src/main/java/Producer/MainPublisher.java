@@ -9,7 +9,7 @@ public class MainPublisher {
     public static void main(String[] args) {
         PublishService service = new PublishService();
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(System.in))) {
-            Exchange simpleExchange =
+            ProducerExchange simpleExchange =
                     service.declareExchange("simple_exchange", "direct", "route");
             String line;
             while ((line = reader.readLine()) != null) {
