@@ -7,18 +7,20 @@ import java.util.concurrent.TimeoutException;
 
 public class MainPublisher {
     public static void main(String[] args) {
-        Publishable service = new PublishService();
+        PublishService service = new PublishService();
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(System.in))) {
+            Exchange simpleExchange =
+                    service.declareExchange("simple_exchange", "direct", "route");
             String line;
             while ((line = reader.readLine()) != null) {
-                service.publishMessage(line);
+                simpleExchange.publishMessage(line);
             }
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
             try {
                 service.closeAll();
-            } catch (TimeoutException | IOException e) {
+            } catch (IOException | TimeoutException e) {
                 e.printStackTrace();
             }
         }

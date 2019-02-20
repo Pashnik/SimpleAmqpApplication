@@ -7,18 +7,16 @@ import com.rabbitmq.client.ConnectionFactory;
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;
 
-public class PublishService implements Publishable {
+public class PublishService {
 
     private Connection connection;
     private Channel channel;
-    private Executor executor;
 
     public PublishService() {
         ConnectionFactory factory = getFactory();
         try {
             this.connection = factory.newConnection();
             this.channel = connection.createChannel();
-            this.executor = new Executor(channel);
         } catch (IOException | TimeoutException e) {
             e.printStackTrace();
         }
@@ -38,12 +36,11 @@ public class PublishService implements Publishable {
         return factory;
     }
 
-    @Override
-    public void publishMessage(String message) throws IOException {
-        executor.sendMessageToExchange(message);
+    public Exchange declareExchange(String exchangeName, String exchangeType, String routingKey) throws IOException {
+        channel.exchangeDeclare(exchangeName, exchangeType);
+        return new Exchange(exchangeName, exchangeType, routingKey, channel);
     }
 
-    @Override
     public void closeAll() throws IOException, TimeoutException {
         channel.close();
         connection.close();
